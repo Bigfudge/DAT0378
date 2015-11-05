@@ -1,0 +1,20 @@
+// en klass innehållande en sorterad lista och en metod
+public class MySortedIntArray implements MyIntSet {
+
+// en sorterad lista av integers som sätts vid skapandet av classen
+   public int[] ints;
+
+// constructor, sätter listan
+   public MySortedIntArray(int[] i) {
+      ints = i;
+   }
+   
+// undersöker om argumentet finns i listan 
+   public boolean member(int element) {
+      if (ints[0] == element)
+         return true;
+      else
+         return false;
+   }
+
+}
