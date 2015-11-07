@@ -1,32 +1,32 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Lab1A {
 
-   public static void main (String[] arg) {
-   
-//      int element = Integer.parseInt(arg[0]);
-      
-      // arg[1] = fil som ska läsas in med scanner och göras om till en lista (som sedan läggs i constructorn)
-	  // System.out.println("Skriv fil:");
-	   String s;
-       Scanner sc = new Scanner(System.in);
-       s = sc.nextLine();
-       File openFile = new File(s);
-       
-       MySortedIntArray test = new MySortedIntArray(openFile.getAbsolutePath());
-   for(int i=0;i<10;i++){
-       System.out.println(test.ints[i]);
-   }
-   
+    public static void main (String[] arg) {
+  
+        try {
+            Scanner sc = new Scanner(new File("test.txt"));//byta ut "test.txt" mot arg[1]
+            List<Integer> ls = new ArrayList<Integer>();
+            
+            while (sc.hasNextInt()){
+                ls.add(sc.nextInt());
+            }
+            
+            int[] ar = new int[ls.size()];
+            
+            for (int i=0; i<ls.size(); i++) {
+                ar[i]=ls.get(i);
+            }
+
+            System.out.println((new MySortedIntArray(ar)).member(79));//byta ut # mot Integer.parseInt(arg[0])
+        }
+
+        catch(FileNotFoundException ex) {
+            System.out.println(ex);
+        }
+    }
 }
-}
-
-
-
-//If your program is invoked using the command java Lab1A <element> <file>,
-//where <file> is a file containing a sorted list of integers separated by spaces, and <element> is an integer, 
-//then the program should print true on standard output if <element> is in <file>, and false otherwise.
-
-
-

@@ -1,34 +1,34 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.*;
+public class MySortedIntArray	implements MyIntSet {
 
-// en klass innehållande en sorterad lista och en metod
-public class MySortedIntArray implements MyIntSet {
+    public int[] ar;
+    
+    public MySortedIntArray(int[] x) {
+        ar = x;
+    }
 
-// en sorterad lista av integers som sätts vid skapandet av classen
-   public int[] ints;
-
-// constructor, sätter listan
-   public MySortedIntArray(String file){
-   		try {
-   				Scanner sc = new Scanner(new File(file));
-   				while (sc.hasNextInt()) {
-   		          ints[ints.length+1]=(sc.nextInt());
-   				}
-   			}
-		   catch(FileNotFoundException ex){
-			   System.out.println(ex);
-		   }
-		   		
-	      
-	   }
-	   
-// undersöker om argumentet finns i listan 
-   public boolean member(int element) {
-      if (ints[0] == element)
-         return true;
-      else
-         return false;
-   }
+    public boolean member(int el) {
+    
+// test.txt inneh�ller: 0 2 4 9 12 19 22 75 76 89 99 120
+    
+        int min = 0;
+        int max = ar.length - 1;
+        
+        while (min <= max) {
+        
+            int mid = min + (max - min) / 2;
+            
+            if (el < ar[mid]) {
+                max = mid - 1;
+            }
+            else if (el > ar[mid]) {
+                min = mid + 1;
+            }
+            else if (el == ar[mid]) {
+                return true;
+            }
+        }
+        return false;
+        
+    }
 
 }
