@@ -8,7 +8,7 @@ public class Lab1A {
     public static void main (String[] arg) {
   
         try {
-            Scanner sc = new Scanner(new File("File"));  //byta ut "File" mot Integer.parseInt(arg[1])
+            Scanner sc = new Scanner(new File(arg[1]));
             ArrayList<Integer> ls = new ArrayList();
             
             while (sc.hasNextInt()){
@@ -22,7 +22,7 @@ public class Lab1A {
             	ar[i]=ls.get(i);
             }
             
-            System.out.println((new MySortedIntArray(ar)).member(79)); //byta ut # mot Integer.parseInt(arg[0])
+            System.out.println((new MySortedIntArray(ar)).member(Integer.parseInt(arg[0])));
         }
 
         catch(FileNotFoundException ex) {
