@@ -9,12 +9,37 @@ import java.util.regex.*;
 public class Lab2 {
 
     /**
-     * ...
+     * 
      */
 
     public static void trade(List<Bid> bids) {
-        // Implement this yourselves. Note that this file does not
-        // define a Bid class.
+    	
+    	// KÖRS EFTER VI HAR BUDLISTAN
+    	// BUDLISTAN ÄR EN ARRAYLIST AV BIDS
+    	// ArrayList<Bid> med namnet bids
+    	
+    	
+    	// GENERERA FELMEDDELANDE VID FÖRSÖK AV ATT ÄNDRA BUD SOM EJ FINNS
+    	
+    	
+    	
+    	
+    	// PRINTAR GENOMFÖRDA AFFÄRER
+    	
+    	
+    	//Er prioritetsköimplementation måste vara så generell att den kan användas både för köparkön och för säljarkön.
+
+    	//Om ni använder Java ska prioritetsköns konstruktorer ta komparatorer som argument:
+
+    	
+    	  // public PriorityQueue(..., Comparator<? super E> comp, ...) {
+    	  //    ...
+    	  // }
+    	
+    	
+    	// PRINTAR ÅTERSTÅENDE BUD
+    	
+    	
     }    
 
     /**
@@ -24,7 +49,7 @@ public class Lab2 {
      *
      * @throws MalformedBid If the bid cannot be parsed.
      */
-
+    
     public static Bid parseBid(String s) throws MalformedBid {
         Matcher m = Pattern.compile(
                       "\\s*(\\S+)\\s+" +
@@ -33,16 +58,18 @@ public class Lab2 {
 
         if (m.matches()) {
             if (m.group(2) == null) {
+            	// ÄNDRING AV BUD
                 // m.group(1): The name of the buyer/seller.
                 // m.group(4): NK or NS.
                 // m.group(5): Old value.
-                // m.group(6): New value.
-                return new Bid(...);  // Incomplete code.
+                // m.group(6): New value.    	
+                return new Bid(m.group(1), m.group(4), Integer.parseInt(m.group(6)), Integer.parseInt(m.group(5)));
             } else {
+            	// NYTT BUD
                 // m.group(1): The name of the buyer/seller.
                 // m.group(2): K or S.
                 // m.group(3): The value.
-                return new Bid(...);  // Incomplete code.
+                return new Bid(m.group(1), m.group(2),Integer.parseInt(m.group(3)));
             }
         } else {
             throw new MalformedBid(s);
@@ -89,7 +116,10 @@ public class Lab2 {
     }
 
     /**
-     * ...
+     * STARTAR PROGRAMMET MED ELLER UTAN FIL
+     * 
+     * MED: LÄSER IN BUDLISTA FRÅN FIL, SEDAN KÖRS TRADE
+     * UTAN: ANVÄNDAREN FÅR SKRIVA IN BUDLISTAN, SEDAN KÖRS TRADE
      */
 
     public static void main(String[] args) {
