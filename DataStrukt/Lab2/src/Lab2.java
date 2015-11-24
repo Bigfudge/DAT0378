@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
+import java.util.ArrayList;
+
 
 /**
  * ...
@@ -13,34 +15,46 @@ public class Lab2 {
      */
 
     public static void trade(List<Bid> bids) {
+    	       
+    	PriorityQueue buyers = new PriorityQueue();
+    	PriorityQueue sellers = new PriorityQueue();
+    	    	
+    	// göra för alla bud i budlistan {
     	
-    	// KÖRS EFTER VI HAR BUDLISTAN
-    	// BUDLISTAN ÄR EN ARRAYLIST AV BIDS
-    	// ArrayList<Bid> med namnet bids
+        for (int i=0; i<bids.size(); i++) {
     	
-    	
-    	// GENERERA FELMEDDELANDE VID FÖRSÖK AV ATT ÄNDRA BUD SOM EJ FINNS
-    	
-    	
-    	
-    	
-    	// PRINTAR GENOMFÖRDA AFFÄRER
-    	
-    	
-    	//Er prioritetsköimplementation måste vara så generell att den kan användas både för köparkön och för säljarkön.
+        	//	om budet är ett förändringsbud måste vi först ta bort det gamla budet
+        	if (bids.get(i).type.equals("NK")) {
+    			buyers.deleteBid(bids.get(i).name, bids.get(i).old_value);
+    			buyers.insertBid(bids.get(i).name, bids.get(i).value);
+    		}
+        	
+        	//	om budet är ett förändringsbud måste vi först ta bort det gamla budet       	
+        	else if (bids.get(i).type.equals("NS")) {
+    			sellers.deleteBid(bids.get(i).name, bids.get(i).old_value);
+    			sellers.insertBid(bids.get(i).name, bids.get(i).value);
+    		}
+        	
+        	else if (bids.get(i).type.equals("K")) {
+    			buyers.insertBid(bids.get(i).name, bids.get(i).value);
+    		}
+        	
+        	else if (bids.get(i).type.equals("S")) {
+    			sellers.insertBid(bids.get(i).name, bids.get(i).value);
+    		}
+        	
+        }
+        
+    	// printar orderlistorna
+        System.out.print("Säljare: ");
+        sellers.print();
+        System.out.println();
+        System.out.print("Köpare: ");
+        buyers.print();
+        System.out.println();
+    }
 
-    	//Om ni använder Java ska prioritetsköns konstruktorer ta komparatorer som argument:
-
-    	
-    	  // public PriorityQueue(..., Comparator<? super E> comp, ...) {
-    	  //    ...
-    	  // }
-    	
-    	
-    	// PRINTAR ÅTERSTÅENDE BUD
-    	
-    	
-    }    
+    
 
     /**
      * Parses a bid.
@@ -49,7 +63,7 @@ public class Lab2 {
      *
      * @throws MalformedBid If the bid cannot be parsed.
      */
-    
+
     public static Bid parseBid(String s) throws MalformedBid {
         Matcher m = Pattern.compile(
                       "\\s*(\\S+)\\s+" +
@@ -58,18 +72,18 @@ public class Lab2 {
 
         if (m.matches()) {
             if (m.group(2) == null) {
-            	// ÄNDRING AV BUD
+            	// Förändringsbud
                 // m.group(1): The name of the buyer/seller.
                 // m.group(4): NK or NS.
                 // m.group(5): Old value.
                 // m.group(6): New value.    	
                 return new Bid(m.group(1), m.group(4), Integer.parseInt(m.group(6)), Integer.parseInt(m.group(5)));
             } else {
-            	// NYTT BUD
+            	// Nytt bud
                 // m.group(1): The name of the buyer/seller.
                 // m.group(2): K or S.
                 // m.group(3): The value.
-                return new Bid(m.group(1), m.group(2),Integer.parseInt(m.group(3)));
+                return new Bid(m.group(1), m.group(2), Integer.parseInt(m.group(3)));
             }
         } else {
             throw new MalformedBid(s);
@@ -116,10 +130,7 @@ public class Lab2 {
     }
 
     /**
-     * STARTAR PROGRAMMET MED ELLER UTAN FIL
-     * 
-     * MED: LÄSER IN BUDLISTA FRÅN FIL, SEDAN KÖRS TRADE
-     * UTAN: ANVÄNDAREN FÅR SKRIVA IN BUDLISTAN, SEDAN KÖRS TRADE
+     *
      */
 
     public static void main(String[] args) {
