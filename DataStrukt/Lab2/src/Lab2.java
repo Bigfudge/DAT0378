@@ -14,44 +14,65 @@ public class Lab2 {
      * 
      */
 
-    public static void trade(List<Bid> bids) {
+    public static void trade(List<Bid> bids) throws MissingBid {
     	       
     	PriorityQueue buyers = new PriorityQueue(new buyComparator());
     	PriorityQueue sellers = new PriorityQueue(new sellComparator());
-    	    	
-    	// göra för alla bud i budlistan {
     	
+    	// gÃ¶ra fÃ¶r alla bud i budlistan {
         for (int i=0; i<bids.size(); i++) {
     	
-        	//	om budet är ett förändringsbud måste vi först ta bort det gamla budet
+        	//	budet Ã¤r ett fÃ¶rÃ¤ndringsbud (kÃ¶p), mÃ¥ste fÃ¶rst ta bort det gamla budet
         	if (bids.get(i).type.equals("NK")) {
-    			buyers.deleteBid(bids.get(i).name, bids.get(i).old_value);
+        		// letar upp det gamla budet i orderlistan och tar bort det
+    			int index = buyers.findBid(bids.get(i).name, bids.get(i).old_value);
+    			if (index == -1) {
+    				throw new MissingBid("Det tidigare budet " + bids.get(i).name + " K " + bids.get(i).old_value + " finns inte");
+    			}
+    			else {
+    				buyers.deleteBid(index);
+    			}
+    			// lÃ¤gger till det nya budet
     			buyers.insertBid(bids.get(i).name, bids.get(i).value);
     		}
         	
-        	//	om budet är ett förändringsbud måste vi först ta bort det gamla budet       	
-        	else if (bids.get(i).type.equals("NS")) {
-    			sellers.deleteBid(bids.get(i).name, bids.get(i).old_value);
+        	//	budet Ã¤r ett fÃ¶rÃ¤ndringsbud (sÃ¤lj), mÃ¥ste fÃ¶rst ta bort det gamla budet
+        	if (bids.get(i).type.equals("NS")) {	
+        		// letar upp det gamla budet i orderlistan och tar bort det
+    			int index = sellers.findBid(bids.get(i).name, bids.get(i).old_value);
+    			if (index == -1) {
+    				throw new MissingBid("Det tidigare budet " + bids.get(i).name + " S " + bids.get(i).old_value + " finns inte");
+    			}
+    			else {
+    				sellers.deleteBid(index);
+    			}
+    			// lÃ¤gger till det nya budet
     			sellers.insertBid(bids.get(i).name, bids.get(i).value);
     		}
         	
+        	// vanligt kÃ¶pbud
         	else if (bids.get(i).type.equals("K")) {
     			buyers.insertBid(bids.get(i).name, bids.get(i).value);
     		}
         	
+        	// vanligt sÃ¤ljbud
         	else if (bids.get(i).type.equals("S")) {
     			sellers.insertBid(bids.get(i).name, bids.get(i).value);
     		}
         	
+        	// HÃ„R KOMMER KODEN FÃ–R ATT UNDERSÃ–KA OM AVSLUT Ã„R MÃ–JLIGT
+        	// TYP JÃ„MFÃ–RA highestBid FÃ–R sellers och buyers
+        	// om det Ã¤r >= printa och ta bort buden
+        	
         }
         
     	// printar orderlistorna
-        System.out.print("Säljare: ");
+        System.out.print("SÃ¤ljare: ");
         sellers.print();
         System.out.println();
-        System.out.print("Köpare: ");
+        System.out.print("KÃ¶pare: ");
         buyers.print();
-        System.out.println();
+        System.out.println();     
     }
 
     
@@ -72,7 +93,7 @@ public class Lab2 {
 
         if (m.matches()) {
             if (m.group(2) == null) {
-            	// Förändringsbud
+            	// FÃ¶rÃ¤ndringsbud
                 // m.group(1): The name of the buyer/seller.
                 // m.group(4): NK or NS.
                 // m.group(5): Old value.
@@ -118,6 +139,17 @@ public class Lab2 {
             super("Malformed bid: " + bid + ".");
         }
     }
+    
+    /**
+     * Exception class for missing bids.
+     */
+
+    public static class MissingBid extends Exception {
+        MissingBid(String bid) {
+            super("Missing bid: " + bid + ".");
+        }
+    }
+
 
     /**
      * Prints usage info.
@@ -155,7 +187,9 @@ public class Lab2 {
                 }
             } catch (MalformedBid e) {
                 System.err.println(e.getMessage());
-                usageInfo();
+                usageInfo();  
+            } catch (MissingBid e) {
+                    System.err.println(e.getMessage());
             } catch (FileNotFoundException e) {
                 System.err.println("File not found: " + args[0] + ".");
                 usageInfo();
