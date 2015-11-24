@@ -1,15 +1,22 @@
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 
 public class PriorityQueue {
 
     public ArrayList<Bid> q = new ArrayList<Bid>();
-    
+    public Comparator<Bid> type;
     // lägga in senare: prioritetsköns konstruktorer ska kunna ta en komparator som argument
     // public PriorityQueue(..., Comparator<? super E> comp, ...) {
     
-    public PriorityQueue() {
+    public PriorityQueue(List<Bid> b, Comparator<Bid> c) {
+    	type = c;
+    	for(int i=0; i < b.size(); i++){
+    		insertBid(b.get(i).name, b.get(i).value);
+    	}
     }
-    
+   
 
     // metod som lägger till nytt bud
     public void insertBid(String n, int v) {
@@ -22,7 +29,7 @@ public class PriorityQueue {
 
     	int newBid_index = q.size()-1;
     	int parent_index = (newBid_index-1)/2;
-    	while (q.get(newBid_index).value > q.get(parent_index).value) {
+    	while ((type.compare(q.get(newBid_index), q.get(parent_index))) > 0) {
     	
         	Bid tmp = q.get(newBid_index);    	
         
