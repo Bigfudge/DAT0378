@@ -3,16 +3,17 @@ import java.util.Comparator;
 
 public class PriorityQueue {
 
+	// the list
     public ArrayList<Bid> q = new ArrayList<Bid>();
     public Comparator<Bid> type;
 
-    // constructor med comparator
+    // constructor with comparator
     public PriorityQueue(Comparator<Bid> c) {
     	type = c;
     }
    
 
-    // metod som lägger till nytt bud
+    // adding a bid
     public void insertBid(String n, int v) {
 
     	// 1.Add the element to the bottom level of the heap.
@@ -59,18 +60,16 @@ public class PriorityQueue {
     }
     
     
-    // metod som tar ut värdet på det mest prioriterade budet i orderlistan
-    // vad göra om listan är tom?
+    // return most significant bid
     public int highestBid() {
     	return q.get(0).value;
     }
     
 	// O(logn) removal
-    // metod som tar bort ett element ur orderlistan
-    // paramter: index till elementet
+    // removes element with index (parameter) from the list
     public void deleteBid(int element_index) {
    
-    	// bara elementet finns orderlistan
+    	// only the element in the list
     	if (q.size()==1) {
         	q.remove(0);
     		return;
@@ -78,7 +77,7 @@ public class PriorityQueue {
     	
     	int last_element_index = q.size()-1;
 
-    	// elementet ligger sista orderlistan
+    	// the elementet is the last in the list
     	if (last_element_index==element_index) {
         	q.remove(element_index);
     		return;
@@ -94,55 +93,48 @@ public class PriorityQueue {
     	// 3. Compare the replaced element with its children
     	// if they are in the correct order, stop.
     	
-    	// hitta child_index
+    	// find index to the child
     	int child1_index = element_index*2+1;
     	int child2_index = element_index*2+2;
     	int child_index = child1_index;
-    	// om elementet har 2 barn, välj ut det största (min heap: välj ut det minsta istället)
+    	// two children, take the most significant child
     	if (child2_index <= last_element_index) {
-        	if (q.get(child1_index).value < q.get(child2_index).value) {
+    		if ((type.compare(q.get(child1_index), q.get(child2_index))) < 0) {
         		child_index++;
         	}
         }
-    	// elementet har inga barn, klar
+    	// no children, done
     	else if (child1_index > last_element_index) {
     		return;
     	}
    
-    	// vid min heap ändra < till >
     	// 4.If not, swap the element and return to the previous step.
-    	while (q.get(element_index).value < q.get(child_index).value) {
-        	Bid tmp = q.get(element_index);    	
-            
+    	while ((type.compare(q.get(element_index), q.get(child_index))) < 0) {
+    	
+        	Bid tmp = q.get(element_index);
         	q.set(element_index, q.get(child_index));
         	q.set(child_index, tmp);
-        	
         	element_index = child_index;
         	
-        	// hitta child_index
+        	// find index to the child
         	child1_index = element_index*2+1;
         	child2_index = element_index*2+2;
         	child_index = child1_index;
-        	// om elementet har 2 barn, välj ut det största (min heap: välj ut det minsta istället)
+        	// two children, take the most significant child
         	if (child2_index <= last_element_index) {
-            	if (q.get(child1_index).value < q.get(child2_index).value) {
+        		if ((type.compare(q.get(child1_index), q.get(child2_index))) < 0) {
             		child_index++;
             	}
             }
-        	// elementet har inga barn, klar
+        	// no children, done
         	else if (child1_index > last_element_index) {
         		return;
         	}
-
     	}
     }
     
-    
-
-    
-    // metod som tar ett namn och ett value
-    // returnerar platsen för elementet i orderlistan
-    // returnerar -1 om elementet ej hittas
+    // returns the index to the element in the list
+    // or -1 if the element is missing
     public int findBid(String n, int v) {
     	for (int i=0; i<q.size(); i++) {
     		if (q.get(i).name.equals(n) & q.get(i).value == v ) {
@@ -151,12 +143,9 @@ public class PriorityQueue {
     	}
     	return -1;
     }
-       
-
     
-    
-    // metod som printar alla bud i orderlistan
-    public void print() {
+    // prints the list
+    public void printList() {
     	for (int i=0; i<q.size(); i++) {
     		System.out.print(q.get(i).name + " " + q.get(i).value);
     		if (i+1<q.size()) {
@@ -165,6 +154,16 @@ public class PriorityQueue {
     	}	
     }
    
-
+    // removes all elements in the list and print each removal, significant order
+    public void print() {
+    	int x = q.size();
+    	for (int i=0; i<x; i++) {
+    		System.out.print(q.get(0).name + " " + q.get(0).value);
+    		if (i+1<x) {
+    			System.out.print(", ");
+    		}
+    		deleteBid(0);
+    	}	
+    }
 
 }

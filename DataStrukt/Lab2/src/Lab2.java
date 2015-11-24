@@ -53,6 +53,7 @@ public class Lab2 {
         	// vanligt köpbud
         	else if (bids.get(i).type.equals("K")) {
     			buyers.insertBid(bids.get(i).name, bids.get(i).value);
+
     		}
         	
         	// vanligt säljbud
@@ -60,19 +61,25 @@ public class Lab2 {
     			sellers.insertBid(bids.get(i).name, bids.get(i).value);
     		}
         	
-        	// HÄR KOMMER KODEN FÖR ATT UNDERSÖKA OM AVSLUT ÄR MÖJLIGT
-        	// TYP JÄMFÖRA highestBid FÖR sellers och buyers
-        	// om det är >= printa och ta bort buden
-        	
+        	// avslut
+            if (sellers.q.size() > 0 & buyers.q.size() > 0) {
+            	if (buyers.highestBid() >= sellers.highestBid()) {
+            		System.out.println(buyers.q.get(0).name + " k�per fr�n " + sellers.q.get(0).name + " f�r " + buyers.highestBid() + " kr");
+            		buyers.deleteBid(0);
+            		sellers.deleteBid(0);
+            	}
+            }
         }
         
     	// printar orderlistorna
-        System.out.print("Säljare: ");
+        System.out.println(); 
+        System.out.println("Orderbok:");
+        System.out.print("S�ljare: ");
         sellers.print();
         System.out.println();
-        System.out.print("Köpare: ");
+        System.out.print("K�pare: ");
         buyers.print();
-        System.out.println();     
+
     }
 
     
