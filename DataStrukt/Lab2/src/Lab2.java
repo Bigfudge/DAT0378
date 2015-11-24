@@ -16,8 +16,8 @@ public class Lab2 {
 
     public static void trade(List<Bid> bids) {
     	       
-    	PriorityQueue buyers = new PriorityQueue();
-    	PriorityQueue sellers = new PriorityQueue();
+    	PriorityQueue buyers = new PriorityQueue(new buyComparator());
+    	PriorityQueue sellers = new PriorityQueue(new sellComparator());
     	    	
     	// göra för alla bud i budlistan {
     	

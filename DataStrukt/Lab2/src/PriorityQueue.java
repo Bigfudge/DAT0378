@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
-
 
 public class PriorityQueue {
 
@@ -10,11 +8,8 @@ public class PriorityQueue {
     // lägga in senare: prioritetsköns konstruktorer ska kunna ta en komparator som argument
     // public PriorityQueue(..., Comparator<? super E> comp, ...) {
     
-    public PriorityQueue(List<Bid> b, Comparator<Bid> c) {
+    public PriorityQueue(Comparator<Bid> c) {
     	type = c;
-    	for(int i=0; i < b.size(); i++){
-    		insertBid(b.get(i).name, b.get(i).value);
-    	}
     }
    
 
@@ -44,19 +39,37 @@ public class PriorityQueue {
     
 
     // metod som tar ut högsta värdet i listan
-     public int highestBid() {
+     public int getHighestBid() {
     	 return q.get(0).value;
+    	 
      }
      
    
-   // metod som tar bort budet från orderlistan
-   // ingen träff: felmeddelande om försök att ändra icke existerande bud
-    public void deleteBid(String n, int v) {
+//Tar bort roten i trädet. Sätter dit det sista värdet. Kollar med barnen och byter plats med den minsta/störtsa elementet.
+    public void deleteHighestBid() {
+	   q.remove(0);
+	   q.set(0, q.get(q.size()-1));
+	   int newBid_index = 0;
+	   int child1=1;
+	   int child2=2;
+	  
+	   
+	   while(type.compare(q.get(Math.min(child1,child2)), q.get(newBid_index)) > 0){
+		   
+		   Bid tmp = q.get(newBid_index);  
+		   
+		   q.set(newBid_index, q.get(Math.min(q.get(child1).value, q.get(child2).value)));
+		   q.set(Math.min(q.get(child1).value, q.get(child2).value), tmp);
+		   
+		   newBid_index = Math.min(child1, child2);
+		   child1=newBid_index*2;
+		   child2=newBid_index*2+1;
+	   }
+	   
 	   
     }
-    
-    
-    public void print() {
+
+	public void print() {
     	for (int i=0; i<q.size(); i++) {
     		System.out.print(q.get(i).name + " " + q.get(i).value);
     		if (i+1<q.size()) {
@@ -64,6 +77,12 @@ public class PriorityQueue {
     		}
     	}	
     }
+
+
+	public void deleteBid(String name, int old_value) {
+		// TODO Auto-generated method stub
+		
+	}
    
 
 
