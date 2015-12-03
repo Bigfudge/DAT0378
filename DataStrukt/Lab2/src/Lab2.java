@@ -64,7 +64,7 @@ public class Lab2 {
         	// avslut
             if (sellers.q.size() > 0 & buyers.q.size() > 0) {
             	if (buyers.highestBid() >= sellers.highestBid()) {
-            		System.out.println(buyers.q.get(0).name + " köper från " + sellers.q.get(0).name + " för " + buyers.highestBid() + " kr");
+            		System.out.println(((Bid)buyers.q.get(0)).name + " köper från " + ((Bid)sellers.q.get(0)).name + " för " + buyers.highestBid() + " kr");
             		buyers.deleteBid(0);
             		sellers.deleteBid(0);
             	}

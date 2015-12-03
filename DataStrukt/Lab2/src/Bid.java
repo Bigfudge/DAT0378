@@ -1,4 +1,4 @@
-public class Bid {
+public class Bid<E> {
 		
 	// Namn på budare
 	public String name;
@@ -34,4 +34,5 @@ public class Bid {
 		name = n;
 		value = v;
 	}
+	
 }
