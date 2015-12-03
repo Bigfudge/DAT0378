@@ -47,8 +47,9 @@ public class PriorityQueue<E> {
     
 	// O(logn) removal
     // removes element with index (parameter) from the list
-    public void deleteBid(int element_index) {
+    public void deleteBid(String n, int v) {
    
+    	int element_index = findBid(n, v);
     	// only the element in the list
     	if (q.size()==1) {
         	q.remove(0);
@@ -115,7 +116,7 @@ public class PriorityQueue<E> {
     
     // returns the index to the element in the list
     // or -1 if the element is missing
-    public int findBid(String n, int v) {
+    private int findBid(String n, int v) {
     	for (int i=0; i<q.size(); i++) {
     		if (((Bid)q.get(i)).name.equals(n) & ((Bid)(q.get(i))).value == v ) {
     			return i;
@@ -123,6 +124,7 @@ public class PriorityQueue<E> {
     	}
     	return -1;
     }
+
     
     // prints the list
     public void printList() {
@@ -142,10 +144,12 @@ public class PriorityQueue<E> {
     		if (i+1<x) {
     			System.out.print(", ");
     		}
-    		deleteBid(0);
+    		deleteMin();
     	}	
     }
-
+    public void deleteMin(){
+    	deleteBid(((Bid)q.get(0)).name, ((Bid)q.get(0)).value);
+    }
 
 
 }

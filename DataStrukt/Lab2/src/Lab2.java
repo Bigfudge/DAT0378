@@ -25,13 +25,12 @@ public class Lab2 {
         	//	budet är ett förändringsbud (köp), måste först ta bort det gamla budet
         	if (bids.get(i).type.equals("NK")) {
         		// letar upp det gamla budet i orderlistan och tar bort det
-    			int index = buyers.findBid(bids.get(i).name, bids.get(i).old_value);
-    			if (index == -1) {
-    				throw new MissingBid("Det tidigare budet " + bids.get(i).name + " K " + bids.get(i).old_value + " finns inte");
-    			}
-    			else {
-    				buyers.deleteBid(index);
-    			}
+ 
+        		try{
+        			buyers.deleteBid(bids.get(i).name, bids.get(i).old_value);
+        		}catch(Exception e){
+        			throw new MissingBid("Det tidigare budet " + bids.get(i).name + " K " + bids.get(i).old_value + " finns inte");
+        		}
     			// lägger till det nya budet
     			buyers.insertBid(bids.get(i).name, bids.get(i).value);
     		}
@@ -39,13 +38,12 @@ public class Lab2 {
         	//	budet är ett förändringsbud (sälj), måste först ta bort det gamla budet
         	if (bids.get(i).type.equals("NS")) {	
         		// letar upp det gamla budet i orderlistan och tar bort det
-    			int index = sellers.findBid(bids.get(i).name, bids.get(i).old_value);
-    			if (index == -1) {
-    				throw new MissingBid("Det tidigare budet " + bids.get(i).name + " S " + bids.get(i).old_value + " finns inte");
-    			}
-    			else {
-    				sellers.deleteBid(index);
-    			}
+    			
+        		try{
+        			buyers.deleteBid(bids.get(i).name, bids.get(i).old_value);
+        		}catch(Exception e){
+        			throw new MissingBid("Det tidigare budet " + bids.get(i).name + " K " + bids.get(i).old_value + " finns inte");
+        		}
     			// lägger till det nya budet
     			sellers.insertBid(bids.get(i).name, bids.get(i).value);
     		}
@@ -65,8 +63,8 @@ public class Lab2 {
             if (sellers.q.size() > 0 & buyers.q.size() > 0) {
             	if (buyers.highestBid() >= sellers.highestBid()) {
             		System.out.println(((Bid)buyers.q.get(0)).name + " k�per fr�n " + ((Bid)sellers.q.get(0)).name + " f�r " + buyers.highestBid() + " kr");
-            		buyers.deleteBid(0);
-            		sellers.deleteBid(0);
+            		buyers.deleteMin();
+            		sellers.deleteMin();
             	}
             }
         }
