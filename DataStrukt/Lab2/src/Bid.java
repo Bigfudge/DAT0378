@@ -1,38 +1,45 @@
-public class Bid<E> {
-		
-	// Namn på budare
-	public String name;
+public class Bid {
 	
-	// Typ av bud
-	// Nytt bud: K eller S
-	// Förändringsbud: NK eller NS
-	public String type;
+	private String name;
+	private String type;
+	private int oldValue;
+	private int newValue;
 	
-	// Värde på bud
-	public int value;
-	
-	// Värde på gammalt bud (används bara vid förändringsbud)
-	public int old_value;
-	
-	// Constructor för nytt bud (budlistan)
-	public Bid(String n , String t, int v) {
+	// Constructor for bids in bid list	(type NK or NS)
+	public Bid(String n , String t, int ov, int nv) {
 		name = n;
 		type = t;
-		value = v;
+		oldValue = ov;
+		newValue = nv;
 	}
 	
-	// Constructor för förändringsbud (budlistan)
-	public Bid(String n , String t, int v, int o) {
+	// Constructor for bids in bid list	(type K or S)
+	public Bid(String n , String t, int nv) {
 		name = n;
 		type = t;
-		value = v;
-		old_value = o;
+		newValue = nv;
 	}
 	
-	// Constructor för orderlista
-	public Bid(String n, int v) {
+	// Constructor for bids in order list
+	public Bid(String n, int nv) {
 		name = n;
-		value = v;
+		newValue = nv;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getType() {
+		return type;
+	}
+	
+	public int getOldValue() {
+		return oldValue;
+	}
+	
+	public int getNewValue() {
+		return newValue;
 	}
 	
 }

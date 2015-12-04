@@ -1,65 +1,71 @@
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
+import java.util.*;
 
 public class PriorityQueue<E> {
 
-	// the list
-    public ArrayList<E> q = new ArrayList<E>();
-    public Comparator<? super E> type;
+	// The queue
+    private ArrayList<E> q = new ArrayList<E>();
+    
+	// The queues comparator
+    private Comparator<? super E> c;
 
-    // constructor with comparator
-    public PriorityQueue(Comparator<? super E> c) {
-    	type = c;
+    // The constructor, sets the queues comparator.
+    public PriorityQueue(Comparator<? super E> comparator) {
+    	c = comparator;
+    }
+    
+    // Returns the size of the queue
+    public int sizeQueue() {
+    	return q.size();
     }
    
-
-    // adding a bid
-    public void insertBid(String n, int v) {
-
+    // Returns the element with the highest priority in the queue.
+    public E topElement() {
+    	return q.get(0);
+    }
+    
+    // Adds the element to the queue.
+    public void addElement(E e) {
     	// 1.Add the element to the bottom level of the heap.
-    	q.add((E)(new Bid(n,v)));
-
+    	q.add(e);
         // 2.Compare the added element with its parent; if they are in the correct order, stop.
         // 3.If not, swap the element with its parent and return to the previous step.
-
     	int newBid_index = q.size()-1;
     	int parent_index = (newBid_index-1)/2;
-    	while ((type.compare(q.get(newBid_index), q.get(parent_index))) > 0) {
     	
+    	while ((c.compare(q.get(newBid_index), q.get(parent_index))) > 0) {
         	E tmp = q.get(newBid_index);    	
-        
         	q.set(newBid_index, q.get(parent_index));
-        	q.set(parent_index, (E) tmp);
-        	
+        	q.set(parent_index, tmp);
         	newBid_index = parent_index;
-        	parent_index = (newBid_index-1)/2;
-    				
+        	parent_index = (newBid_index-1)/2;		
     	}
     }
     
-    
-    
-    // return most significant bid
-    public int highestBid() {
-    	return ((Bid)(q.get(0))).value;
+    // Returns the index to the element in the queue.
+    private int findElement(E e) {
+    	for (int i=0; i < sizeQueue(); i++) {
+    		if (c.compare(q.get(i),e) == 0) {
+    			return i;
+    		}
+    	}
+    	return -1;
     }
-    
-	// O(logn) removal
-    // removes element with index (parameter) from the list
-    public void deleteBid(String n, int v) {
+    			
+    // Removes the element from the queue, will generate an exception if the element isn't in the list.
+    public void deleteElement(E e) {
    
-    	int element_index = findBid(n, v);
-    	// only the element in the list
-    	if (q.size()==1) {
-        	q.remove(0);
+    	int element_index = findElement(e);
+
+    	// The element is alone in the queue
+    	if (sizeQueue()==1 & element_index == 0 ) {
+    		q.remove(0);
     		return;
     	}
     	
-    	int last_element_index = q.size()-1;
+    	int last_element_index = sizeQueue()-1;
 
-    	// the elementet is the last in the list
-    	if (last_element_index==element_index) {
+    	// The elementet is last in the list
+    	if (element_index == last_element_index) {
         	q.remove(element_index);
     		return;
     	}
@@ -80,7 +86,7 @@ public class PriorityQueue<E> {
     	int child_index = child1_index;
     	// two children, take the most significant child
     	if (child2_index <= last_element_index) {
-    		if ((type.compare(q.get(child1_index), q.get(child2_index))) < 0) {
+    		if ((c.compare(q.get(child1_index), q.get(child2_index))) < 0) {
         		child_index++;
         	}
         }
@@ -90,7 +96,7 @@ public class PriorityQueue<E> {
     	}
    
     	// 4.If not, swap the element and return to the previous step.
-    	while ((type.compare(q.get(element_index), q.get(child_index))) < 0) {
+    	while ((c.compare(q.get(element_index), q.get(child_index))) < 0) {
     	
         	E tmp = q.get(element_index);
         	q.set(element_index, q.get(child_index));
@@ -103,7 +109,7 @@ public class PriorityQueue<E> {
         	child_index = child1_index;
         	// two children, take the most significant child
         	if (child2_index <= last_element_index) {
-        		if ((type.compare(q.get(child1_index), q.get(child2_index))) < 0) {
+        		if ((c.compare(q.get(child1_index), q.get(child2_index))) < 0) {
             		child_index++;
             	}
             }
@@ -113,43 +119,4 @@ public class PriorityQueue<E> {
         	}
     	}
     }
-    
-    // returns the index to the element in the list
-    // or -1 if the element is missing
-    private int findBid(String n, int v) {
-    	for (int i=0; i<q.size(); i++) {
-    		if (((Bid)q.get(i)).name.equals(n) & ((Bid)(q.get(i))).value == v ) {
-    			return i;
-    		}
-    	}
-    	return -1;
-    }
-
-    
-    // prints the list
-    public void printList() {
-    	for (int i=0; i<q.size(); i++) {
-    		System.out.print(((Bid)q.get(i)).name + " " + ((Bid)(q.get(i))).value);
-    		if (i+1<q.size()) {
-    			System.out.print(", ");
-    		}
-    	}	
-    }
-   
-    // removes all elements in the list and print each removal, significant order
-    public void print() {
-    	int x = q.size();
-    	for (int i=0; i<x; i++) {
-    		System.out.print(((Bid)q.get(0)).name + " " + ((Bid)q.get(0)).value);
-    		if (i+1<x) {
-    			System.out.print(", ");
-    		}
-    		deleteMin();
-    	}	
-    }
-    public void deleteMin(){
-    	deleteBid(((Bid)q.get(0)).name, ((Bid)q.get(0)).value);
-    }
-
-
 }

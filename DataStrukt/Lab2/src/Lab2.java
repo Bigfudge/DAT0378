@@ -3,84 +3,87 @@ import java.util.*;
 import java.util.regex.*;
 import java.util.ArrayList;
 
-
-/**
- * ...
- */
-
 public class Lab2 {
 
-    /**
-     * 
-     */
-
     public static void trade(List<Bid> bids) throws MissingBid {
-    	       
-    	PriorityQueue buyers = new PriorityQueue(new buyComparator());
-    	PriorityQueue sellers = new PriorityQueue(new sellComparator());
+    	PriorityQueue<Bid> buyers = new PriorityQueue<Bid>(new buyComparator());
+    	PriorityQueue<Bid> sellers = new PriorityQueue<Bid>(new sellComparator());
     	
-    	// göra för alla bud i budlistan {
         for (int i=0; i<bids.size(); i++) {
     	
-        	//	budet är ett förändringsbud (köp), måste först ta bort det gamla budet
-        	if (bids.get(i).type.equals("NK")) {
-        		// letar upp det gamla budet i orderlistan och tar bort det
- 
-        		try{
-        			buyers.deleteBid(bids.get(i).name, bids.get(i).old_value);
-        		}catch(Exception e){
-        			throw new MissingBid("Det tidigare budet " + bids.get(i).name + " K " + bids.get(i).old_value + " finns inte");
+        	// Deletes the bid from the order list
+        	if (bids.get(i).getType().equals("NK")) { 
+        		try {
+        			buyers.deleteElement(new Bid(bids.get(i).getName(), bids.get(i).getOldValue()));
         		}
-    			// lägger till det nya budet
-    			buyers.insertBid(bids.get(i).name, bids.get(i).value);
+        		catch(Exception e) {
+        			throw new MissingBid("Det tidigare budet " + bids.get(i).getName() + " K " + bids.get(i).getOldValue() + " finns inte");
+        		}
+        		// Adds the new bid to the order list
+    			buyers.addElement(new Bid(bids.get(i).getName(), bids.get(i).getNewValue()));
     		}
         	
-        	//	budet är ett förändringsbud (sälj), måste först ta bort det gamla budet
-        	if (bids.get(i).type.equals("NS")) {	
-        		// letar upp det gamla budet i orderlistan och tar bort det
+        	// Deletes the bid from the order list       	
+        	if (bids.get(i).getType().equals("NS")) {	
     			
-        		try{
-        			buyers.deleteBid(bids.get(i).name, bids.get(i).old_value);
-        		}catch(Exception e){
-        			throw new MissingBid("Det tidigare budet " + bids.get(i).name + " K " + bids.get(i).old_value + " finns inte");
+        		try {
+        			sellers.deleteElement(new Bid(bids.get(i).getName(), bids.get(i).getOldValue()));
         		}
-    			// lägger till det nya budet
-    			sellers.insertBid(bids.get(i).name, bids.get(i).value);
+        		catch(Exception e){
+        			throw new MissingBid("Det tidigare budet " + bids.get(i).getName() + " S " + bids.get(i).getOldValue() + " finns inte");
+        		}
+        		// Adds the new bid to the order list
+        		sellers.addElement(new Bid(bids.get(i).getName(), bids.get(i).getNewValue()));;
     		}
         	
-        	// vanligt köpbud
-        	else if (bids.get(i).type.equals("K")) {
-    			buyers.insertBid(bids.get(i).name, bids.get(i).value);
+        	else if (bids.get(i).getType().equals("K")) {
+        		buyers.addElement(new Bid(bids.get(i).getName(), bids.get(i).getNewValue()));
+    		}
+        	
+        	else if (bids.get(i).getType().equals("S")) {
+        		sellers.addElement(new Bid(bids.get(i).getName(), bids.get(i).getNewValue()));    		}
+        	
+        	// Trading and print
+            if (sellers.sizeQueue() > 0 & buyers.sizeQueue() > 0) {
+            	
+            	Bid topBuyer = (Bid)buyers.topElement();
+            	Bid topSeller = (Bid)sellers.topElement();
 
-    		}
-        	
-        	// vanligt säljbud
-        	else if (bids.get(i).type.equals("S")) {
-    			sellers.insertBid(bids.get(i).name, bids.get(i).value);
-    		}
-        	
-        	// avslut
-            if (sellers.q.size() > 0 & buyers.q.size() > 0) {
-            	if (buyers.highestBid() >= sellers.highestBid()) {
-            		System.out.println(((Bid)buyers.q.get(0)).name + " k�per fr�n " + ((Bid)sellers.q.get(0)).name + " f�r " + buyers.highestBid() + " kr");
-            		buyers.deleteMin();
-            		sellers.deleteMin();
+            	if (topBuyer.getNewValue() >= topSeller.getNewValue()) {
+            		System.out.println(topBuyer.getName() + " k�per fr�n " + topSeller.getName() + " f�r " + topBuyer.getNewValue() + " kr");
+            		buyers.deleteElement(topBuyer);
+            		sellers.deleteElement(topSeller);
             	}
             }
         }
         
-    	// printar orderlistorna
+    	// Prints the order list
         System.out.println(); 
         System.out.println("Orderbok:");
+        
         System.out.print("S�ljare: ");
-        sellers.print();
+        int sellersSize = sellers.sizeQueue();
+        for (int i = 0; i < sellersSize; i++) {
+        	Bid topSeller = (Bid)sellers.topElement();
+        	System.out.print(topSeller.getName() + " " + topSeller.getNewValue());
+        	if (i+1 < sellersSize) {
+        		System.out.print(", ");
+        	}
+        	sellers.deleteElement(topSeller);
+        }
+        int buyersSize = buyers.sizeQueue();
         System.out.println();
-        System.out.print("K�pare: ");
-        buyers.print();
-
+        
+        System.out.print("K�pare: "); 
+        for (int i = 0; i < buyersSize; i++) {
+        	Bid topBuyer = (Bid)buyers.topElement();
+        	System.out.print(topBuyer.getName() + " " + topBuyer.getNewValue());
+        	if (i+1 < buyersSize) {
+        		System.out.print(", ");
+        	}
+        	buyers.deleteElement(topBuyer);
+        }
     }
-
-    
 
     /**
      * Parses a bid.
@@ -98,14 +101,12 @@ public class Lab2 {
 
         if (m.matches()) {
             if (m.group(2) == null) {
-            	// Förändringsbud
                 // m.group(1): The name of the buyer/seller.
                 // m.group(4): NK or NS.
                 // m.group(5): Old value.
                 // m.group(6): New value.    	
-                return new Bid(m.group(1), m.group(4), Integer.parseInt(m.group(6)), Integer.parseInt(m.group(5)));
+                return new Bid(m.group(1), m.group(4), Integer.parseInt(m.group(5)), Integer.parseInt(m.group(6)));
             } else {
-            	// Nytt bud
                 // m.group(1): The name of the buyer/seller.
                 // m.group(2): K or S.
                 // m.group(3): The value.
@@ -131,7 +132,7 @@ public class Lab2 {
         while (s.hasNextLine()) {
             bids.add(parseBid(s.nextLine()));
         }
-
+        s.close();
         return bids;
     }
 
@@ -165,10 +166,6 @@ public class Lab2 {
         System.err.println("If no file is given, then input is " +
                            "read from standard input.");
     }
-
-    /**
-     *
-     */
 
     public static void main(String[] args) {
         if (args.length >= 2) {
