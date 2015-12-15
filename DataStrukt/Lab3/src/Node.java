@@ -6,14 +6,20 @@ public class Node {
 	
 	private String name;
 	
-	private PriorityQueue<BLineStop> grannmatris = new PriorityQueue<BLineStop>();
+	private PriorityQueue<BLineStop> grannmatris = new PriorityQueue<BLineStop>(new nodeComparator());
 
 	public Node(BStop s) {
 		name = s.getName();
 	}
 	
 	public void updateNode(BLineStop b) {
-		grannmatris.add(b);
+		if (!grannmatris.contains(b)) {
+			grannmatris.add(b);
+		}
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	

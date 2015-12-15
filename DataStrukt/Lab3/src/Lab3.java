@@ -2,7 +2,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import Lab3Help.*;
 
 public class Lab3<E extends Comparable<? super E>> implements Path<E> {
@@ -38,6 +37,26 @@ public class Lab3<E extends Comparable<? super E>> implements Path<E> {
 			  for (int i=0; i < stops.size(); i++) {
 				  g.add(new Node(stops.get(i)));
 			  }
+			  
+			  List<BLineTable> lines = f.readLines("stops-gbg.txt");
+			  
+			  for (int i=0; i < lines.size(); i++) {
+				  
+				  BLineStop[] tmp = lines.get(i).getStops();
+				  
+				  for (int j=0; j < tmp.length; j++) {
+					
+					  String tmp_name = tmp[j].getName();
+					  
+					  for (int x =0; x < g.size(); x++) {
+						  if (tmp_name.equals(g.get(x).getName())) {
+							  g.get(x).updateNode(tmp[j+1]);
+						  }
+					  }
+					  
+				  }
+			  }		 
+			  
 		  }
 		  catch (Exception e) {
 		  }
