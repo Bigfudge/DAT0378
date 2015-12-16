@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import Lab3Help.*;
@@ -63,6 +64,19 @@ public class Lab3<E extends Comparable<? super E>> implements Path<E> {
 		
 		  
 
+	}
+	public Path<E> dikstras(String start, String end, ArrayList<Node> g){
+		HashMap<String, Node> hmap = new HashMap<String, Node>();
+		ArrayList<Node> visited = new ArrayList<Node>(); 
+		for(int i=0; i<g.size(); i++){
+			hmap.put((g.get(i).getName()), g.get(i));
+		}
+		hmap.get(start).setDistance(0);
+		while(!visited.contains(hmap.get(end))){
+			
+		}
+		
+		return null;
 	}
 }
 
